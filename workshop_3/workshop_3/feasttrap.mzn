@@ -40,7 +40,7 @@ constraint (forall(i in 1..(len - 1) where TASTE[dish[i]] = sour) (TASTE[dish[i+
 constraint (forall(i in 1..(len - 1) where TASTE[dish[i]] = sweet) (TASTE[dish[i+1]] != spicy /\ TASTE[dish[i+1]] != umame)); % sweet -> not spicy and not umame
 constraint (forall(i, j in 1..len where i < j  /\ TEMP[dish[i]] = hot /\ TEMP[dish[j]] = cold) (
                    exists (k in i+1..j-1) (TEMP[dish[k]] = warm))); % warm dish between hot and cold
-constraint (forall(i in 1..(len - 1) where heavy[dish[i]]) (not heavy[dish[i+1]])); %No two heavy dishes in a row
+constraint (forall(i in 1..(len - 2) where heavy[dish[i]]  /\ heavy[dish[i+1]]) (not heavy[dish[i+2]])); %No two heavy dishes in a row
 
 
 
