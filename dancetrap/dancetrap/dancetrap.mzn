@@ -31,9 +31,9 @@ var int: power = sum(i in 1..len) (dance_value[legs[i], arms[i]] + entice_value[
 
 % Constraints
 
-% constraint (forall(legMove in LEGS)  ((sum(i in 1..maxlen)(legs[i] = legMove)) < maxlegs[legMove]));
-% constraint (forall(armMove in ARMS)  ((sum(i in 1..maxlen)(arms[i] = armMove)) < maxarms[armMove]));
-% constraint (forall(faceMove in FACE) ((sum(i in 1..maxlen)(face[i] = faceMove)) < maxface[faceMove]));
+constraint (forall(legMove in LEGS)  ((sum(i in 1..maxlen)(legs[i] = legMove)) <= maxlegs[legMove]));
+ constraint (forall(armMove in ARMS)  ((sum(i in 1..maxlen)(arms[i] = armMove)) <= maxarms[armMove]));
+% constraint (forall(faceMove in FACE) ((sum(i in 1..maxlen)(face[i] = faceMove)) <= maxface[faceMove]));
 
 
 constraint(forall(i in len+1..maxlen) (legs[i] = stand /\ arms[i] = neutral /\ face[i] = blank));
