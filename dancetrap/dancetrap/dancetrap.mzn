@@ -28,7 +28,7 @@ include "global_cardinality_low_up_closed.mzn";
 include "regular.mzn";
 
 array[1..7, LEGS] of int: legs_dfa = 
-[| 2, 0, 4, 5, 6, 7    % Start 
+[|  2, 0, 4, 5, 6, 7    % Start 
   | 0, 0, 0, 5, 6, 7    % Spin
   | 2, 0, 4, 0, 0, 7    % Leap
   | 2, 0, 4, 5, 6, 7    % Waltz
@@ -38,12 +38,12 @@ array[1..7, LEGS] of int: legs_dfa =
   
  
 array[1..6, ARMS] of int: arms_dfa =
-[| 0, 3, 4, 0, 6       % Start
+[| 0, 3, 4, 5, 6       % Start
  | 0, 3, 4, 5, 6       % Beckon
  | 2, 0, 4, 0, 6       % Out
  | 2, 3, 0, 0, 6       % Up
- | 0, 3, 4, 0, 6       % Wrap, 5
- | 0, 3, 4, 5, 6 |];   % Neutral, 6
+ | 0, 3, 4, 0, 6       % Wrapped
+ | 0, 3, 4, 5, 6 |];   % Neutral
 
 
 array[1..7, FACE] of int: face_dfa =
