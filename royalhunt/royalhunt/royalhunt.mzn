@@ -18,47 +18,45 @@ array[COURT] of var HORSE union {0}: rider2horse;
 array[HORSE] of var COURT union {0}: horse2rider;
 
 var int: obj = sum(i in COURT where rider2horse[i] != 0)(enjoy[i, rider2horse[i]]) - (100 * violations);
-var int: violations = sum(i, j in HORSE where speed[i] > speed[j])      
-                         (horse2rider[i] != 0 /\
-                         ((horse2rider[j] != 0 /\ ability[horse2rider[i]] < ability[rider2horse[j]]) \/
-                         horse2rider[j] = 0)); 
-                         
+
+var int: violations = sum(i, j in HORSE where speed[i] > speed[j] /\     
+                         (not (
+                         (horse2rider[i] = 0 \/
+                         (horse2rider[i] = 0 /\ horse2rider[j] = 0) \/
+                         ability[horse2rider[i]] >= ability[horse2rider[j]])))) (1); 
+                   
+                                                         
 % Constraints
 
 include "alldifferent_except_0.mzn";
 
 constraint (alldifferent_except_0(rider2horse));
 
-% constraint (forall(i, j in COURT where rank[i] > rank[j]) 
-%             (rider2horse[i] = 0 -> rider2horse[j] = 0));
 
-% 1
 % The emperor enjoys his ride most
 constraint (forall(i in 2..n where rider2horse[i] != 0) (enjoy[emperor, rider2horse[emperor]] > enjoy[i, rider2horse[i]]));
 
-% 2
 % Ride until no horses left or no court members left, whichever comes first
 constraint (sum(i in COURT) (rider2horse[i] > 0) = min(n, m));
 
-% 3 
 % Channeling constraint
 constraint (forall(i in COURT, j in HORSE) (rider2horse[i] = j <-> horse2rider[j] = i));
 
-% 4
 % If a court member holds a higher rank than another, then either 
 % (a) the beauty of their horse can be no less than that assigned to the other, 
 % (b) the lower rank member does not ride, or
 % (c) both court members do not ride.
-constraint (forall(i, j in COURT where rank[i] > rank[j] /\ rider2horse[i] != 0 /\ rider2horse[j] != 0) 
-             (beauty[rider2horse[i]] >= beauty[rider2horse[j]]));
+constraint (forall(i, j in COURT where rank[i] > rank[j])
+             (rider2horse[j] = 0 \/
+             (rider2horse[i] = 0 /\ rider2horse[j] = 0) \/ 
+             (beauty[rider2horse[i]] >= beauty[rider2horse[j]])));
 
-% 5
 % Riders must have non-negative enjoyment
 constraint (forall(i in COURT where rider2horse[i] != 0) (enjoy[i, rider2horse[i]] >= 0));
          
 % Solve
-%output ["horse = \(rider2horse);\nobj = \(obj);"];
-output ["horse = \(rider2horse);\nrider = \(horse2rider);\nobj = \(obj);\nviolations = \(violations)"];
+output ["horse = \(rider2horse);\nobj = \(obj);"];
+%output ["horse = \(rider2horse);\nrider = \(horse2rider);\nobj = \(obj);\nviolations = \(violations)"];
 
 solve maximize obj;
 
